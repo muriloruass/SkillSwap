@@ -1,0 +1,27 @@
+<section class="home">
+  <h1>SkillSwap Platform</h1>
+  <p>Conectando clientes e freelancers.</p>
+
+  <div *ngIf="loading">Carregando estatísticas...</div>
+
+  <p *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </p>
+
+  <div class="stats" *ngIf="stats">
+    <div class="card">
+      <h3>Total Users</h3>
+      <p>{{ stats.total_users }}</p>
+    </div>
+
+    <div class="card">
+      <h3>Active Jobs</h3>
+      <p>{{ stats.active_jobs }}</p>
+    </div>
+
+    <div class="card">
+      <h3>Total Value Moved</h3>
+      <p>{{ stats.total_value_moved }}</p>
+    </div>
+  </div>
+</section>

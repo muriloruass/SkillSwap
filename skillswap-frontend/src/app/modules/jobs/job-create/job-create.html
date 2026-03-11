@@ -1,0 +1,46 @@
+<section class="job-create-page">
+  <h2>Criar Job</h2>
+
+  <form (ngSubmit)="onSubmit()">
+    <label for="title">Title</label>
+    <input
+      id="title"
+      type="text"
+      name="title"
+      [(ngModel)]="title"
+      required
+    />
+
+    <label for="description">Description</label>
+    <textarea
+      id="description"
+      name="description"
+      [(ngModel)]="description"
+      required
+    ></textarea>
+
+    <label for="budget">Budget</label>
+    <input
+      id="budget"
+      type="number"
+      name="budget"
+      [(ngModel)]="budget"
+      required
+    />
+
+    <label for="category">Category</label>
+    <input
+      id="category"
+      type="text"
+      name="category"
+      [(ngModel)]="category"
+      required
+    />
+
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Criando...' : 'Criar Job' }}
+    </button>
+  </form>
+
+  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+</section>

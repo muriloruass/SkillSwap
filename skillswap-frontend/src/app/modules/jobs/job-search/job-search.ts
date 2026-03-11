@@ -11,55 +11,60 @@ import { Job, JobSearchRequest } from '../../../models/job.model';
 @Component({
   selector: 'app-job-search',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LoadingSpinnerComponent, ErrorMessageComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    LoadingSpinnerComponent,
+    ErrorMessageComponent
+  ],
   templateUrl: './job-search.html',
   styleUrls: ['./job-search.css']
 })
 export class JobSearchComponent implements OnInit {
   searchForm!: FormGroup;
-  jobs: Job[] = []; // Where we store the fetched jobs
-  
-  isLoading: boolean = false;
+  jobs: Job[] = [];
+  isLoading = false;
   errorMessage: string | null = null;
-  
+
   constructor(
     private fb: FormBuilder,
     private jobService: JobService
   ) {}
 
-  ngOnInit() {
-    // Initialize form with default empty/open filters
+  ngOnInit(): void {
     this.searchForm = this.fb.group({
-      category: [''],       // Empty category 
-      min_budget: [null],   // No min budget limit
-      status: ['open']      // Default 'open' jobs
+      category: [''],
+      min_budget: [null],
+      status: ['open']
     });
+
+    // opcional: já carregar jobs abertos ao abrir a página
+    this.onSearch();
   }
 
-  // Action triggered when clicking the Search Button
-  onSearch() {
+  onSearch(): void {
     this.isLoading = true;
     this.errorMessage = null;
+    this.jobs = [];
 
-    // Retrieve form filters values
     const filters: JobSearchRequest = this.searchForm.value;
 
-    // Ask JobService to fetch data from API
     this.jobService.searchJobs(filters).subscribe({
-      next: (foundJobs) => {
+      next: (foundJobs: Job[]) => {
         this.jobs = foundJobs;
         this.isLoading = false;
-        
+
         if (this.jobs.length === 0) {
-           this.errorMessage = "Sorry, no jobs found matching those filters!";
+          this.errorMessage = 'Sorry, no jobs found matching those filters!';
         }
       },
-      error: (err) => {
-        // If API goes down or connection fails
+      error: (err: any) => {
         this.isLoading = false;
-        this.errorMessage = `Error fetching jobs (Status: ${err.status}): ${err.message || 'Check your connection'}`;
+        this.errorMessage =
+          err?.error?.error ||
+          err?.error?.message ||
+          `Error fetching jobs (Status: ${err?.status ?? 'unknown'}).`;
       }
     });
   }
 }
-

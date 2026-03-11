@@ -1,0 +1,29 @@
+<div class="register-box">
+  <h2>Register</h2>
+
+  <form (ngSubmit)="onSubmit()">
+    <label for="name">Name</label>
+    <input id="name" type="text" name="name" [(ngModel)]="name" required />
+
+    <label for="username">Username</label>
+    <input id="username" type="text" name="username" [(ngModel)]="username" required />
+
+    <label for="email">Email</label>
+    <input id="email" type="email" name="email" [(ngModel)]="email" required />
+
+    <label for="password">Password</label>
+    <input id="password" type="password" name="password" [(ngModel)]="password" required />
+
+    <label for="bio">Bio</label>
+    <textarea id="bio" name="bio" [(ngModel)]="bio" required></textarea>
+
+    <label for="skills">Skills (separadas por vírgula)</label>
+    <input id="skills" type="text" name="skills" [(ngModel)]="skills" required />
+
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Criando...' : 'Criar conta' }}
+    </button>
+  </form>
+
+  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+</div>
