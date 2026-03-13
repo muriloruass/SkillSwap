@@ -2,15 +2,16 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
-import { Auth } from '../services/auth';
+import { AuthService } from '../../auth/auth.service';
 
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
-  const auth = inject(Auth);
+  const authService = inject(AuthService);
   const router = inject(Router);
 
-  const token = auth.getToken();
+  const token = authService.getToken();
 
-  const authReq = token
+  // Clona a requisição adicionando o token se existir
+  const authReq = token 
     ? req.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`
@@ -18,13 +19,13 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
       })
     : req;
 
+  // Faz a requisição e trata erro 401
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
-        auth.logout();
+        authService.logout();
         router.navigate(['/login']);
       }
-
       return throwError(() => error);
     })
   );

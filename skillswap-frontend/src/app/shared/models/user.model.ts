@@ -1,18 +1,24 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+export interface User {
+  id: string;
+  name: string;
+  username: string;
+  email: string;
+  bio: string;
+  skills: string[];
+  rating_avg?: number;
+  completed_jobs?: number;
+}
 
-@Injectable({
-  providedIn: 'root',
-})
-export class User {
-  private http = inject(HttpClient);
-  private apiUrl = 'https://stingray-app-wxhhn.ondigitalocean.app';
+export interface RegisterRequest {
+  name: string;
+  username: string;
+  email: string;
+  password: string;
+  bio: string;
+  skills: string[];
+}
 
-  getMe() {
-    return this.http.get<any>(`${this.apiUrl}/users/me`);
-  }
-
-  getPublicProfile(username: string) {
-    return this.http.get<any>(`${this.apiUrl}/users/${username}`);
-  }
+export interface LoginRequest {
+  email: string;
+  password: string;
 }

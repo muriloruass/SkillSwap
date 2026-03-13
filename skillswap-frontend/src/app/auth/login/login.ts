@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Auth } from '../../core/services/auth';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +12,7 @@ import { Auth } from '../../core/services/auth';
   styleUrls: ['./login.css'],
 })
 export class Login {
-  private auth = inject(Auth);
+  private authService = inject(AuthService);
   private router = inject(Router);
 
   email = '';
@@ -22,14 +22,14 @@ export class Login {
 
   onSubmit(): void {
     if (!this.email || !this.password) {
-      this.errorMessage = 'Email e password são obrigatórios.';
+      this.errorMessage = 'Email and password are required.';
       return;
     }
 
     this.loading = true;
     this.errorMessage = '';
 
-    this.auth.login({
+    this.authService.login({
       email: this.email,
       password: this.password,
     }).subscribe({
@@ -37,7 +37,7 @@ export class Login {
         this.router.navigate(['/']);
       },
       error: (err: any) => {
-        this.errorMessage = err?.error?.error || 'Login falhou.';
+        this.errorMessage = err?.error?.error || 'Login failed. Please try again.';
         this.loading = false;
       },
       complete: () => {
@@ -45,4 +45,4 @@ export class Login {
       },
     });
   }
-}
+}   
