@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { JobService } from '../../../core/services/job.service';
+import { ProposalService } from '../../../core/services/proposal';
 import { Job } from '../../../models/job.model';
 
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner';
@@ -30,6 +31,7 @@ export class JobDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private jobService: JobService,
+    private proposalService: ProposalService,
     private fb: FormBuilder
   ) {
     // Inicialização da caixa de preenchimento de proposta
@@ -73,20 +75,31 @@ export class JobDetailsComponent implements OnInit {
     if (this.proposalForm.invalid || !this.job) return;
 
     this.isSubmitting = true;
+    this.errorMessage = null;
     
     const newProposalData = {
-      job_id: this.job.id,
       price: this.proposalForm.get('price')?.value,
       cover_letter: this.proposalForm.get('cover_letter')?.value
     };
 
-    console.log('Sending Proposal to Server:', newProposalData);
-
-    // Passo 2 simulado por enquanto (esperar serviço oficial ficar pronto)
-    setTimeout(() => {
-      this.isSubmitting = false;
-      this.submitSuccess = true;
-      this.proposalForm.reset();
-    }, 1500);
+    // Chamada oficial da Nossa API de Propostas (Via Serviço)
+    this.proposalService.createProposal(this.job.id.toString(), newProposalData).subscribe({
+      next: (response) => {
+        // Sucesso: Esconde o formulaŕio, desativa botões de loading e exibe a marca verde.
+        this.isSubmitting = false;
+        this.submitSuccess = true;
+        this.proposalForm.reset();
+        console.log('Proposal created elegantly:', response);
+      },
+      error: (err) => {
+        this.isSubmitting = false;
+        // Backend pode acusar 409 Se o Freelancer tentar se candidatar duas vezes
+        if (err.status === 409) {
+           this.errorMessage = "You have already submitted a proposal for this job.";
+        } else {
+           this.errorMessage = err.error?.error || 'Failed to submit proposal. Please try again.';
+        }
+      }
+    });
   }
 }

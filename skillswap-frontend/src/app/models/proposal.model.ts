@@ -1,6 +1,7 @@
 export interface Proposal {
   id: number;
   job_id: number;
+  job_title?: string;
   freelancer_id: number;
   freelancer_name?: string;
   price: number;

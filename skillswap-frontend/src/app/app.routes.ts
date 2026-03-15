@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { JobSearchComponent } from './modules/jobs/job-search/job-search';
 import { JobDetailsComponent } from './modules/jobs/job-details/job-details';
+import { MyBidsComponent } from './modules/jobs/my-bids/my-bids';
 
 // Auth
 import { Login } from './auth/login/login';
@@ -38,6 +39,9 @@ export const routes: Routes = [
   
   // Real authentication for user's job details
   { path: 'jobs/:id', component: JobDetailsComponent, canActivate: [authGuard] },
+  
+  // Proposals
+  { path: 'proposals/my-bids', component: MyBidsComponent, canActivate: [authGuard] },
 
   { path: '**', redirectTo: '' }
 ];
