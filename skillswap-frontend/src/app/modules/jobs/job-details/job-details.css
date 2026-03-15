@@ -105,6 +105,65 @@
   line-height: 1.5;
 }
 
+/* Formulário de Proposta */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-main);
+  margin-bottom: 0.5rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.8rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: #fafbfc;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  background-color: white;
+}
+
+textarea.form-control {
+  resize: vertical;
+}
+
+/* Alerta Verde de Sucesso */
+.success-alert {
+  background-color: #ecfdf5;
+  border: 1px solid #10b981;
+  color: #065f46;
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.success-icon {
+  width: 48px;
+  height: 48px;
+  color: #10b981;
+  margin-bottom: 0.5rem;
+}
+
+.success-alert p {
+  font-weight: 600;
+  margin: 0;
+}
+
 .btn-block {
   width: 100%;
   padding: 1rem;
@@ -121,3 +180,4 @@
     position: static; /* Tira o efeito Sticky */
   }
 }
+

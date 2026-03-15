@@ -63,10 +63,11 @@ export class Register {
 
     this.authService.register(registerData).subscribe({
       next: (response) => {
-        // Auto login after registration
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('user', JSON.stringify(response.user));
-        this.router.navigate(['/']);
+        // CORREÇÃO: A API de Registro não devolve o Token. 
+        // O usuário foi salvo com sucesso, e nós o redirecionamos para a tela de Login
+        // para que ele preencha a senha recém-criada e a API devolva o Token autêntico.
+        alert('Account created elegantly! Please Login below to get your Token.');
+        this.router.navigate(['/login']);
       },
       error: (err) => {
         this.loading = false;

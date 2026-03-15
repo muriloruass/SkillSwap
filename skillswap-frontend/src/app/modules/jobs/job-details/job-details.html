@@ -30,16 +30,42 @@
       </div>
     </div>
 
-    <!-- DIREITA: Valores e "Call to Action" -->
+    <!-- DIREITA: Painel Interativo de Propostas -->
     <div class="job-sidebar">
       <div class="sidebar-card">
         <h3>Project Budget</h3>
         <p class="budget-price">💰 ${{ job.budget }}</p>
         
-        <p class="sidebar-info">Are you the perfect fit for this job? Submit a proposal to the client.</p>
+        <p class="sidebar-info" *ngIf="!submitSuccess">Are you the perfect fit for this job? Submit a proposal to the client.</p>
+
+        <!-- Mensagem de Sucesso (Fica Escondida até Enviar) -->
+        <div class="success-alert" *ngIf="submitSuccess">
+          <svg viewBox="0 0 24 24" fill="none" class="success-icon">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <p>Proposal submitted successfully!</p>
+        </div>
         
-        <!-- Esse botão ainda não faz nada. Vamos criar a "Ação de Enviar Proposta" no Passo 3 -->
-        <button class="btn btn-primary btn-block">Submit Proposal</button>
+        <!-- O Formulário de Submeter Proposta -->
+        <form *ngIf="!submitSuccess" [formGroup]="proposalForm" (ngSubmit)="submitProposal()">
+          <div class="form-group">
+            <label for="price">Your Proposal ($):</label>
+            <input type="number" id="price" formControlName="price" class="form-control" placeholder="E.g 500" min="1">
+          </div>
+
+          <div class="form-group">
+            <label for="cover_letter">Cover Letter:</label>
+            <textarea id="cover_letter" formControlName="cover_letter" class="form-control" rows="4" placeholder="Tell the client why you're the best for this... (Min 20 chars)"></textarea>
+          </div>
+
+          <!-- O botão de Clique Oficial -->
+          <button type="submit" class="btn btn-primary btn-block" 
+                  [disabled]="proposalForm.invalid || isSubmitting">
+            <span *ngIf="!isSubmitting">Submit Proposal</span>
+            <span *ngIf="isSubmitting">Sending...</span>
+          </button>
+        </form>
+
       </div>
     </div>
 
