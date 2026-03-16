@@ -35,6 +35,12 @@
       <div class="bid-actions" *ngIf="bid.status === 'pending'">
         <button class="btn btn-outline w-full" (click)="cancelBid(bid.id)">Cancel Proposal</button>
       </div>
+
+      <div class="bid-actions" *ngIf="bid.status === 'accepted'">
+        <a [routerLink]="['/jobs', bid.job_id, 'review']" class="btn btn-rate w-full">
+          ⭐ Rate Client
+        </a>
+      </div>
     </div>
   </div>
 </div>

@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { JobSearchComponent } from './modules/jobs/job-search/job-search';
 import { JobDetailsComponent } from './modules/jobs/job-details/job-details';
 import { MyBidsComponent } from './modules/jobs/my-bids/my-bids';
+import { LeaveReviewComponent } from './modules/jobs/leave-review/leave-review';
 
 // Auth
 import { Login } from './auth/login/login';
@@ -37,6 +38,9 @@ export const routes: Routes = [
   { path: 'jobs/create', component: CreateJob, canActivate: [authGuard] },
   { path: 'jobs/my-postings', component: MyJobs, canActivate: [authGuard] },
   
+  // Leave Review — must be declared BEFORE jobs/:id to avoid route conflict
+  { path: 'jobs/:id/review', component: LeaveReviewComponent, canActivate: [authGuard] },
+
   // Real authentication for user's job details
   { path: 'jobs/:id', component: JobDetailsComponent, canActivate: [authGuard] },
   

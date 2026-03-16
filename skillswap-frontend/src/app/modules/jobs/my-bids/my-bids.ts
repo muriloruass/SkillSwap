@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { ProposalService } from '../../../core/services/proposal';
 import { Proposal } from '../../../models/proposal.model';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner';
@@ -8,7 +9,7 @@ import { ErrorMessageComponent } from '../../../shared/components/error-message/
 @Component({
   selector: 'app-my-bids',
   standalone: true,
-  imports: [CommonModule, LoadingSpinnerComponent, ErrorMessageComponent],
+  imports: [CommonModule, RouterLink, LoadingSpinnerComponent, ErrorMessageComponent],
   templateUrl: './my-bids.html',
   styleUrl: './my-bids.css',
 })
