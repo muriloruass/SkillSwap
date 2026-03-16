@@ -15,7 +15,6 @@ export class Register {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  
   name = '';
   username = '';
   email = '';
@@ -27,7 +26,6 @@ export class Register {
   errorMessage = '';
   suggestedUsername: string | null = null;
 
-  
   get skillsArray(): string[] {
     return this.skillsInput
       .split(',')
@@ -36,7 +34,6 @@ export class Register {
   }
 
   onSubmit(): void {
- 
     if (!this.name || !this.username || !this.email || !this.password || !this.bio || !this.skillsInput) {
       this.errorMessage = 'All fields are required.';
       return;
@@ -62,7 +59,6 @@ export class Register {
 
     this.authService.register(registerData).subscribe({
       next: (response) => {
-        
         alert('Account created successfully! Please login below.');
         this.router.navigate(['/login']);
       },
@@ -70,7 +66,6 @@ export class Register {
         this.loading = false;
         
         if (err.status === 409 && err.error?.suggested_username) {
-       
           this.errorMessage = err.error.error;
           this.suggestedUsername = err.error.suggested_username;
         } else if (err.status === 400) {

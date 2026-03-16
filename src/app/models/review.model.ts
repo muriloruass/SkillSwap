@@ -10,7 +10,7 @@ export interface Review {
 }
 
 export interface ReviewCreateRequest {
-  target_id: number;
+  job_id: number;
   rating: number;
   comment?: string;
 }

@@ -1,10 +1,10 @@
- import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Job {
-  job_id?: string;        // ← API retorna job_id
-  id?: string;            // ← mantém para compatibilidade
+  job_id?: string;
+  id?: string;
   title: string;
   description: string;
   budget: number;
@@ -27,12 +27,27 @@ export interface Proposal {
   created_at: string;
 }
 
+export interface JobSearchRequest {
+  category?: string;
+  min_budget?: number;
+  status?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class JobsService {
-  private http = inject(HttpClient);
   private apiUrl = 'https://stingray-app-wxhhn.ondigitalocean.app';
+
+  constructor(private http: HttpClient) { }
+
+  searchJobs(filters: JobSearchRequest): Observable<Job[]> {
+    return this.http.post<Job[]>(`${this.apiUrl}/jobs/search`, filters);
+  }
+
+  getJobById(id: string): Observable<Job> {
+    return this.http.get<Job>(`${this.apiUrl}/jobs/${id}`);
+  }
 
   createJob(jobData: Partial<Job>): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/jobs`, jobData);
@@ -40,10 +55,6 @@ export class JobsService {
 
   getMyJobs(): Observable<Job[]> {
     return this.http.get<Job[]>(`${this.apiUrl}/jobs/my-postings`);
-  }
-
-  getJobById(id: string): Observable<Job> {
-    return this.http.get<Job>(`${this.apiUrl}/jobs/${id}`);
   }
 
   getJobProposals(jobId: string): Observable<Proposal[]> {

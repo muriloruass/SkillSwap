@@ -29,4 +29,9 @@ export class UsersService {
   getPublicProfile(username: string): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/users/${username}`);
   }
+
+   
+  updateProfile(data: Partial<User>): Observable<User> {
+    return this.http.patch<User>(`${this.apiUrl}/users/me`, data);
+  }
 }
