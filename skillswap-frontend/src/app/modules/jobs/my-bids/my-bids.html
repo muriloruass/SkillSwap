@@ -1,0 +1,46 @@
+<div class="container my-bids-container">
+  <div class="header">
+    <h1>My Proposals</h1>
+    <p>Manage and track your submitted bids</p>
+  </div>
+
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+  
+  <app-error-message *ngIf="errorMessage" [message]="errorMessage"></app-error-message>
+
+  <div *ngIf="!isLoading && !errorMessage" class="bids-grid">
+    <div *ngIf="bids.length === 0" class="empty-state">
+      <p>You haven't submitted any proposals yet.</p>
+    </div>
+
+    <div class="bid-card" *ngFor="let bid of bids">
+      <div class="bid-header">
+        <h2 class="job-title">{{ bid.job_title || 'Job #' + bid.job_id }}</h2>
+        <span class="status-badge" [ngClass]="bid.status">
+          {{ bid.status | titlecase }}
+        </span>
+      </div>
+      
+      <div class="bid-details">
+        <div class="detail-item">
+          <span class="label">Price Submitted:</span>
+          <span class="value">${{ bid.price }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Status:</span>
+          <span class="value" style="text-transform: capitalize;">{{ bid.status }}</span>
+        </div>
+      </div>
+
+      <div class="bid-actions" *ngIf="bid.status === 'pending'">
+        <button class="btn btn-outline w-full" (click)="cancelBid(bid.id)">Cancel Proposal</button>
+      </div>
+
+      <div class="bid-actions" *ngIf="bid.status === 'accepted'">
+        <a [routerLink]="['/jobs', bid.job_id, 'review']" class="btn btn-rate w-full">
+          ⭐ Rate Client
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

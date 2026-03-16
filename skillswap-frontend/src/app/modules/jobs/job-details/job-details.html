@@ -1,0 +1,73 @@
+<div class="container job-details-page">
+  
+  <!-- Loading and Error State -->
+  <app-loading-spinner [isLoading]="isLoading"></app-loading-spinner>
+  
+  <div *ngIf="errorMessage" class="error-wrapper">
+    <app-error-message [message]="errorMessage"></app-error-message>
+    <button class="btn btn-outline" (click)="goBack()">Go Back to Search</button>
+  </div>
+
+  <!-- Job Content (Só mostra se encontrou um Job) -->
+  <div *ngIf="!isLoading && !errorMessage && job" class="job-split-layout">
+    
+    <!-- ESQUERDA: Texto Principal -->
+    <div class="job-main-info">
+      <button class="back-link" (click)="goBack()">← Back to Search</button>
+      
+      <div class="job-header">
+        <span class="badge badge-open">{{ job.category }}</span>
+        <h1>{{ job.title }}</h1>
+        <div class="job-meta">
+          <span><strong>Status:</strong> {{ job.status | uppercase }}</span>
+          <span><strong>Job ID:</strong> {{ job.id }}</span>
+        </div>
+      </div>
+
+      <div class="job-description">
+        <h2>About the Project</h2>
+        <p>{{ job.description }}</p>
+      </div>
+    </div>
+
+    <!-- DIREITA: Painel Interativo de Propostas -->
+    <div class="job-sidebar">
+      <div class="sidebar-card">
+        <h3>Project Budget</h3>
+        <p class="budget-price">💰 ${{ job.budget }}</p>
+        
+        <p class="sidebar-info" *ngIf="!submitSuccess">Are you the perfect fit for this job? Submit a proposal to the client.</p>
+
+        <!-- Mensagem de Sucesso (Fica Escondida até Enviar) -->
+        <div class="success-alert" *ngIf="submitSuccess">
+          <svg viewBox="0 0 24 24" fill="none" class="success-icon">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <p>Proposal submitted successfully!</p>
+        </div>
+        
+        <!-- O Formulário de Submeter Proposta -->
+        <form *ngIf="!submitSuccess" [formGroup]="proposalForm" (ngSubmit)="submitProposal()">
+          <div class="form-group">
+            <label for="price">Your Proposal ($):</label>
+            <input type="number" id="price" formControlName="price" class="form-control" placeholder="E.g 500" min="1">
+          </div>
+
+          <div class="form-group">
+            <label for="cover_letter">Cover Letter:</label>
+            <textarea id="cover_letter" formControlName="cover_letter" class="form-control" rows="4" placeholder="Tell the client why you're the best for this... (Min 20 chars)"></textarea>
+          </div>
+
+          <!-- O botão de Clique Oficial -->
+          <button type="submit" class="btn btn-primary btn-block" 
+                  [disabled]="proposalForm.invalid || isSubmitting">
+            <span *ngIf="!isSubmitting">Submit Proposal</span>
+            <span *ngIf="isSubmitting">Sending...</span>
+          </button>
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+</div>

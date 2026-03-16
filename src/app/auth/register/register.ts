@@ -62,15 +62,8 @@ export class Register {
 
     this.authService.register(registerData).subscribe({
       next: (response) => {
-<<<<<<< HEAD
         
         alert('Account created successfully! Please login below.');
-=======
-        // CORREÇÃO: A API de Registro não devolve o Token. 
-        // O usuário foi salvo com sucesso, e nós o redirecionamos para a tela de Login
-        // para que ele preencha a senha recém-criada e a API devolva o Token autêntico.
-        alert('Account created elegantly! Please Login below to get your Token.');
->>>>>>> f7f35650c8c1d3a5088bcab0a5d486d1887bb854
         this.router.navigate(['/login']);
       },
       error: (err) => {

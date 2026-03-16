@@ -1,0 +1,272 @@
+﻿.home-container {
+  min-height: calc(100vh - 200px);
+}
+
+/* Hero Section */
+.hero {
+  background: linear-gradient(135deg, #2C3E50, #3498DB);
+  color: white;
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.highlight {
+  color: #2ECC71;
+}
+
+.subtitle {
+  font-size: 1.3rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn-primary {
+  background: #2ECC71;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-primary:hover {
+  background: #27AE60;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+}
+
+.btn-secondary {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.3);
+  transform: translateY(-2px);
+}
+
+/* Stats Section */
+.stats-section {
+  padding: 4rem 2rem;
+  background: #F8F9FA;
+  text-align: center;
+}
+
+.stats-section h2 {
+  color: #2C3E50;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #7F8C8D;
+}
+
+.spinner {
+  border: 4px solid #ECF0F1;
+  border-top: 4px solid #2ECC71;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.alert {
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.alert.error {
+  background: #FDF1F0;
+  border: 1px solid #FADBD8;
+  color: #E74C3C;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.stat-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+}
+
+.stat-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #2ECC71;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: #7F8C8D;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* How It Works */
+.how-it-works {
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.how-it-works h2 {
+  color: #2C3E50;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.step {
+  padding: 2rem;
+  position: relative;
+}
+
+.step-number {
+  width: 50px;
+  height: 50px;
+  background: #2ECC71;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0 auto 1.5rem;
+}
+
+.step h3 {
+  color: #2C3E50;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.step p {
+  color: #7F8C8D;
+  line-height: 1.6;
+}
+
+/* CTA Section */
+.cta-section {
+  background: linear-gradient(135deg, #2ECC71, #27AE60);
+  color: white;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.cta-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn-large {
+  padding: 1.2rem 2.5rem;
+  font-size: 1.2rem;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+  padding: 1.2rem 2.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-outline:hover {
+  background: white;
+  color: #2ECC71;
+  transform: translateY(-2px);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+  }
+}

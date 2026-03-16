@@ -1,0 +1,91 @@
+<div class="review-page">
+  <div class="review-card">
+
+    <!-- Header -->
+    <div class="review-card__header">
+      <div class="review-card__icon-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+          <path fill-rule="evenodd"
+            d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
+            clip-rule="evenodd" />
+        </svg>
+      </div>
+      <h1 class="review-card__title">Rate Your Client</h1>
+      <p class="review-card__subtitle">Your feedback helps build trust in the SkillSwap community.</p>
+    </div>
+
+    <!-- Success State -->
+    <div *ngIf="isSuccess" class="success-state">
+      <div class="success-state__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="48" height="48">
+          <path fill-rule="evenodd"
+            d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
+            clip-rule="evenodd" />
+        </svg>
+      </div>
+      <h2 class="success-state__title">Review Submitted!</h2>
+      <p class="success-state__message">Thank you for your feedback. Redirecting to your proposals...</p>
+    </div>
+
+    <!-- Review Form -->
+    <form *ngIf="!isSuccess" class="review-form" (ngSubmit)="submitReview()">
+
+      <!-- Star Rating -->
+      <div class="form-group">
+        <label class="form-label">Your Rating</label>
+        <div class="star-rating">
+          <button
+            *ngFor="let star of stars"
+            type="button"
+            class="star-btn"
+            [class.filled]="star <= selectedRating"
+            (click)="selectRating(star)"
+            [attr.aria-label]="'Rate ' + star + ' out of 5 stars'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
+                clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+        <p class="rating-label" *ngIf="selectedRating > 0">
+          <span *ngIf="selectedRating === 1">😞 Poor</span>
+          <span *ngIf="selectedRating === 2">😐 Fair</span>
+          <span *ngIf="selectedRating === 3">🙂 Good</span>
+          <span *ngIf="selectedRating === 4">😊 Very Good</span>
+          <span *ngIf="selectedRating === 5">🤩 Excellent!</span>
+        </p>
+      </div>
+
+      <!-- Comment Textarea -->
+      <div class="form-group">
+        <label class="form-label" for="comment">Feedback about the Client</label>
+        <textarea
+          id="comment"
+          class="form-textarea"
+          [(ngModel)]="comment"
+          name="comment"
+          rows="4"
+          placeholder="Describe your experience working with this client..."></textarea>
+      </div>
+
+      <!-- Error Message -->
+      <app-error-message *ngIf="errorMessage" [message]="errorMessage"></app-error-message>
+
+      <!-- Submit -->
+      <div class="form-actions">
+        <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+        <button
+          *ngIf="!isLoading"
+          type="submit"
+          class="btn-submit"
+          [disabled]="selectedRating === 0">
+          Submit Feedback
+        </button>
+        <a routerLink="/proposals/my-bids" class="btn-cancel">Cancel</a>
+      </div>
+
+    </form>
+
+  </div>
+</div>

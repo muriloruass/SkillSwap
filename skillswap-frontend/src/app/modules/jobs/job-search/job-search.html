@@ -1,0 +1,72 @@
+<div class="container jobs-page">
+  <!-- header -->
+  <div class="header-section">
+    <h1>Search Jobs 🔎</h1>
+    <p>Find the best freelance projects for you.</p>
+  </div>
+
+  <!-- search box -->
+  <form class="search-box" [formGroup]="searchForm" (ngSubmit)="onSearch()">
+    
+    <!-- category filter -->
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <select class="form-control" formControlName="category">
+        <option value="">All Categories</option>
+        <option value="Web Development">Web Development</option>
+        <option value="Design">Design</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+
+    <!-- min budget filter -->
+    <div class="form-group">
+      <label class="form-label">Min Budget ($)</label>
+      <input type="number" class="form-control" placeholder="Ex: 100" formControlName="min_budget">
+    </div>
+    
+    <!-- status filter -->
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <select class="form-control" formControlName="status">
+        <option value="open">Open</option>
+        <option value="in_progress">In Progress</option>
+        <option value="completed">Completed</option>
+      </select>
+    </div>
+
+    <!-- search button -->
+    <button type="submit" class="btn btn-primary search-button" [disabled]="isLoading">
+       {{ isLoading ? 'Searching...' : 'Search Jobs' }}
+    </button>
+  </form>
+
+  <!-- loading spinner -->
+  <app-loading-spinner [isLoading]="isLoading"></app-loading-spinner>
+  
+  <div *ngIf="errorMessage" class="error-wrapper">
+     <app-error-message [message]="errorMessage"></app-error-message>
+  </div>
+
+  <!-- jobs list -->
+  <div class="jobs-list">
+    
+    <!-- empty state -->
+    <div class="empty-state" *ngIf="jobs.length === 0 && !isLoading && !errorMessage">
+      <p class="placeholder-text">      Use os filtros acima para pesquisar empregos disponíveis na plataforma!</p>
+    </div>
+
+    <!-- Se ACHOU Vagas na API, vamos listá-las! -->
+    <div *ngIf="jobs.length > 0" class="job-cards-grid">
+      <div class="simple-card" *ngFor="let job of jobs">
+         <h3>{{ job.title }}</h3>
+         <span class="badge badge-open">{{ job.category }}</span>
+         <p class="budget">💰 ${{ job.budget }}</p>
+         <a [routerLink]="['/jobs', job.id]" class="btn btn-outline" style="width: 100%; margin-top: 1rem; text-align: center; text-decoration: none; cursor: pointer;">
+           View Details
+         </a>
+      </div>
+    </div>
+    
+  </div>
+</div>
