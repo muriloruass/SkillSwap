@@ -1,12 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Navbar } from './core/navbar/navbar';
-import { Footer } from './core/footer/footer';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Navbar, Footer],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {}
+export class App {
+  protected readonly title = signal('skillswap-frontend');
+}
