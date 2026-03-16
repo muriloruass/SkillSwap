@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';  
 import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],  
   templateUrl: './register.html',
   styleUrls: ['./register.css'],
 })
@@ -15,20 +15,19 @@ export class Register {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  // Form fields
+  
   name = '';
   username = '';
   email = '';
   password = '';
   bio = '';
-  skillsInput = ''; // Comma-separated string
-
-  // UI states
+  skillsInput = '';  
+ 
   loading = false;
   errorMessage = '';
   suggestedUsername: string | null = null;
 
-  // Convert skillsInput to array
+  
   get skillsArray(): string[] {
     return this.skillsInput
       .split(',')
@@ -37,7 +36,7 @@ export class Register {
   }
 
   onSubmit(): void {
-    // Basic validation
+ 
     if (!this.name || !this.username || !this.email || !this.password || !this.bio || !this.skillsInput) {
       this.errorMessage = 'All fields are required.';
       return;
@@ -63,16 +62,15 @@ export class Register {
 
     this.authService.register(registerData).subscribe({
       next: (response) => {
-        // Auto login after registration
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('user', JSON.stringify(response.user));
-        this.router.navigate(['/']);
+        
+        alert('Account created successfully! Please login below.');
+        this.router.navigate(['/login']);
       },
       error: (err) => {
         this.loading = false;
         
         if (err.status === 409 && err.error?.suggested_username) {
-          // Conflict error - username already exists
+       
           this.errorMessage = err.error.error;
           this.suggestedUsername = err.error.suggested_username;
         } else if (err.status === 400) {

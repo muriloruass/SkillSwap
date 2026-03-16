@@ -2,17 +2,17 @@
   <h2>Create Account</h2>
   <p class="subtitle">Join SkillSwap community</p>
 
-   
+  <!-- Loading -->
   <div *ngIf="loading" class="loading">
     <div class="spinner"></div>
     <p>Creating your account...</p>
   </div>
 
-  
+  <!-- Error Message -->
   <div *ngIf="errorMessage" class="alert alert-error">
     {{ errorMessage }}
     
-    
+    <!-- Suggested Username -->
     <div *ngIf="suggestedUsername" class="suggestion">
       <p>Suggested username:</p>
       <button type="button" class="btn-suggestion" (click)="useSuggestedUsername()">
@@ -21,10 +21,10 @@
     </div>
   </div>
 
-  
+  <!-- Registration Form -->
   <form (ngSubmit)="onSubmit()" #registerForm="ngForm" *ngIf="!loading">
     
-   
+    <!-- Full Name -->
     <div class="form-group">
       <label for="name">Full Name *</label>
       <input
@@ -40,7 +40,7 @@
       </div>
     </div>
 
-     
+    <!-- Username -->
     <div class="form-group">
       <label for="username">Username *</label>
       <input
@@ -58,7 +58,7 @@
       </div>
     </div>
 
-    
+    <!-- Email -->
     <div class="form-group">
       <label for="email">Email *</label>
       <input
@@ -75,7 +75,8 @@
         <div *ngIf="emailInput.errors?.['email']">Invalid email format</div>
       </div>
     </div>
- 
+
+    <!-- Password -->
     <div class="form-group">
       <label for="password">Password *</label>
       <input
@@ -93,7 +94,7 @@
       </div>
     </div>
 
-   
+    <!-- Bio -->
     <div class="form-group">
       <label for="bio">Bio *</label>
       <textarea
@@ -109,7 +110,7 @@
       </div>
     </div>
 
-   
+    <!-- Skills -->
     <div class="form-group">
       <label for="skills">Skills *</label>
       <input
@@ -130,14 +131,14 @@
       </div>
     </div>
 
-     
+    <!-- Submit Button -->
     <button type="submit" class="btn-primary" [disabled]="registerForm.invalid || loading">
       {{ loading ? 'Creating account...' : 'Register' }}
     </button>
 
-    
+     
     <p class="login-link">
-      Already have an account? <a routerLink="/login">Login</a>
+      Already have an account? <a routerLink="/login" class="login-link-text">Login</a>
     </p>
   </form>
 </section>
