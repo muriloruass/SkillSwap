@@ -1,4 +1,4 @@
-﻿<div class="home-container">
+<div class="home-container">
   <!-- Hero Section -->
   <section class="hero">
     <div class="hero-content">
@@ -7,7 +7,7 @@
       
       <div class="hero-buttons">
         <a routerLink="/jobs/create" class="btn-primary">Post a Job</a>
-        <a routerLink="/register" class="btn-secondary">Join Now</a>
+        <a *ngIf="!authService.isLoggedIn()" routerLink="/register" class="btn-secondary">Join Now</a>
       </div>
     </div>
   </section>
@@ -40,7 +40,7 @@
 
       <div class="stat-card">
         <div class="stat-icon">💰</div>
-        <div class="stat-value">{{ stats.total_value_moved | currency:'USD':'symbol':'1.0-0' }}</div>
+        <div class="stat-value">{{ formatLargeValue(stats.total_value_moved) }}</div>
         <div class="stat-label">Total Value</div>
       </div>
     </div>
@@ -82,7 +82,7 @@
     <h2>Ready to start your next project?</h2>
     <div class="cta-buttons">
       <a routerLink="/jobs/create" class="btn-primary btn-large">Post a Job</a>
-      <a routerLink="/register" class="btn-outline btn-large">Sign Up Free</a>
+      <a *ngIf="!authService.isLoggedIn()" routerLink="/register" class="btn-outline btn-large">Sign Up Free</a>
     </div>
   </section>
 </div>

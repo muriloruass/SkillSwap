@@ -1,5 +1,9 @@
-.app-container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 24px;
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
 }

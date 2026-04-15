@@ -24,6 +24,7 @@ export class Register {
  
   loading = false;
   errorMessage = '';
+  successMessage = '';
   suggestedUsername: string | null = null;
 
   get skillsArray(): string[] {
@@ -59,8 +60,11 @@ export class Register {
 
     this.authService.register(registerData).subscribe({
       next: (response) => {
-        alert('Account created successfully! Please login below.');
-        this.router.navigate(['/login']);
+        this.successMessage = 'Account created successfully! Redirecting to login...';
+        this.loading = false;
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 2000);
       },
       error: (err) => {
         this.loading = false;

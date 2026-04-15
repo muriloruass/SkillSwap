@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { JobsService } from '../../../core/services/job.service';
+import { ProposalService } from '../../../core/services/proposal';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner';
 import { ErrorMessageComponent } from '../../../shared/components/error-message/error-message';
 
@@ -17,7 +17,7 @@ export class MyBidsComponent implements OnInit {
   isLoading: boolean = true;
   errorMessage: string = '';
 
-  constructor(private jobsService: JobsService) {}
+  constructor(private proposalService: ProposalService) {}
 
   ngOnInit() {
     this.loadMyBids();
@@ -26,7 +26,7 @@ export class MyBidsComponent implements OnInit {
   loadMyBids() {
     this.isLoading = true;
     
-    this.jobsService.getJobProposals('my').subscribe({
+    this.proposalService.getMyBids().subscribe({
       next: (data: any) => {
         this.bids = data;
         this.isLoading = false;
@@ -40,6 +40,16 @@ export class MyBidsComponent implements OnInit {
   }
 
   cancelBid(bidId: number) {
-    console.log('Cancel bid:', bidId);
+    if (confirm('Are you sure you want to cancel this proposal?')) {
+      this.proposalService.deleteProposal(bidId).subscribe({
+        next: () => {
+          this.bids = this.bids.filter(b => b.id !== bidId);
+        },
+        error: (err: any) => {
+          console.error('Error canceling bid:', err);
+          alert('Failed to cancel proposal. Please try again.');
+        }
+      });
+    }
   }
 }

@@ -1,59 +1,123 @@
-# SkillswapFrontend
+# SkillSwap Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.1.
+Frontend web application for a freelance marketplace simulation where users can post jobs, place bids, and review completed work.
 
-## Development server
+This project is portfolio-ready and organized around reusable Angular standalone components, route guards, HTTP interceptors, and domain-based services.
 
-To start a local development server, run:
+## What This Project Demonstrates
 
-```bash
-ng serve
-```
+- End-to-end authentication flow with JWT (login/register/logout)
+- Protected routing with guard-based access control
+- HTTP interception for automatic auth header injection
+- Job marketplace flow: create jobs, search jobs, bid management, and reviews
+- Modular project structure using Angular 21 standalone APIs
+- Strict TypeScript configuration for reliability and maintainability
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Tech Stack
 
-## Code scaffolding
+- Angular 21
+- TypeScript (strict mode)
+- RxJS
+- Angular Router
+- Angular HttpClient + interceptor
+- Prettier
+- Vitest (via Angular unit test builder)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Local Setup
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+### 1. Install dependencies
 
 ```bash
-ng build
+npm install
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### 2. Run development server
 
 ```bash
-ng test
+npm start
 ```
 
-## Running end-to-end tests
+Application runs at `http://localhost:4200`.
 
-For end-to-end (e2e) testing, run:
+### 3. Build for production
 
 ```bash
-ng e2e
+npm run build:prod
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### 4. Run tests
 
-## Additional Resources
+```bash
+npm test
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+For CI mode (non-watch):
+
+```bash
+npm run test:ci
+```
+
+## NPM Scripts
+
+- `npm start`: Starts local dev server
+- `npm run build`: Default Angular build
+- `npm run build:prod`: Production build
+- `npm run watch`: Development watch build
+- `npm test`: Unit tests in watch mode
+- `npm run test:ci`: Unit tests without watch
+- `npm run format`: Format source and root config files
+- `npm run format:check`: Validate formatting
+
+## Project Structure
+
+High-level organization:
+
+```text
+src/app/
+	auth/           # authentication, guard, login/register
+	core/           # layout, navbar/footer, interceptors, shared services
+	jobs/           # user-owned job posting flows
+	modules/jobs/   # bid/search/details/review job modules
+	platform/       # home and platform-level features
+	users/          # profile pages and user data
+	models/         # domain model contracts
+```
+
+Extra documentation:
+
+- `docs/ARCHITECTURE.md`
+- `docs/PROJECT-STRUCTURE.md`
+
+## API Configuration
+
+The API base URL is centralized in:
+
+- `src/app/core/config/api.config.ts`
+
+This avoids hardcoded URL duplication and simplifies future environment migration.
+
+## Route Map (Main Flows)
+
+- `/` Home page
+- `/login` Login
+- `/register` Registration
+- `/me` Logged-in user profile
+- `/users/:username` Public profile
+- `/jobs/create` Create a new job
+- `/jobs/my-postings` My job postings
+- `/jobs/search` Job search
+- `/jobs/my-bids` My bids
+- `/jobs/:id` Job details
+- `/jobs/:id/review` Leave review
+
+## Quality and Organization Improvements Applied
+
+- Centralized API URL configuration
+- Removed duplicate guard implementation file
+- Standardized service patterns and imports
+- Upgraded README from Angular template to recruiter-focused documentation
+- Added structure and architecture docs for onboarding and maintainability
+
+## Academic Context
+
+This repository is maintained as part of a college project and showcases practical frontend engineering skills for real-world CRUD and authenticated platform scenarios.

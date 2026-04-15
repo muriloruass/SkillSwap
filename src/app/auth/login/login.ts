@@ -34,7 +34,7 @@ export class Login {
       password: this.password,
     }).subscribe({
       next: () => {
-        this.router.navigate(['/']);
+        this.router.navigate(['/jobs/create']);
       },
       error: (err: any) => {
         this.errorMessage = err?.error?.error || 'Login failed. Please try again.';

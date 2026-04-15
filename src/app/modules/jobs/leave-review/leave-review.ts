@@ -50,7 +50,7 @@ export class LeaveReviewComponent implements OnInit {
         this.isLoading = false;
         this.isSuccess = true;
         setTimeout(() => {
-          this.router.navigate(['/proposals/my-bids']);
+          this.router.navigate(['/jobs/my-bids']);
         }, 2500);
       },
       error: (err) => {

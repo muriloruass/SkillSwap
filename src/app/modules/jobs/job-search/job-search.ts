@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner';
 import { ErrorMessageComponent } from '../../../shared/components/error-message/error-message';
 
-import { JobsService } from '../../../core/services/job.service';
+import { JobsService, Job, JobSearchRequest } from '../../../core/services/job.service';
 
 @Component({
   selector: 'app-job-search',
@@ -17,43 +17,49 @@ import { JobsService } from '../../../core/services/job.service';
 })
 export class JobSearchComponent implements OnInit {
   searchForm!: FormGroup;
-  jobs: any[] = [];
+  jobs: Job[] = []; // Where we store the fetched jobs
   
   isLoading: boolean = false;
   errorMessage: string | null = null;
   
   constructor(
     private fb: FormBuilder,
-    private jobsService: JobsService
+    private jobService: JobsService
   ) {}
 
   ngOnInit() {
+    // Initialize form with default empty/open filters
     this.searchForm = this.fb.group({
-      category: [''],
-      min_budget: [null],
-      status: ['open']
+      category: [''],       // Empty category 
+      min_budget: [null],   // No min budget limit
+      status: ['open']      // Default 'open' jobs
     });
   }
 
+  // Action triggered when clicking the Search Button
   onSearch() {
     this.isLoading = true;
     this.errorMessage = null;
 
-    const filters = this.searchForm.value;
+    // Retrieve form filters values
+    const filters: JobSearchRequest = this.searchForm.value;
 
-    this.jobsService.searchJobs(filters).subscribe({
-      next: (foundJobs: any) => {
+    // Ask JobService to fetch data from API
+    this.jobService.searchJobs(filters).subscribe({
+      next: (foundJobs: Job[]) => {
         this.jobs = foundJobs;
         this.isLoading = false;
         
         if (this.jobs.length === 0) {
-          this.errorMessage = "Sorry, no jobs found matching those filters!";
+           this.errorMessage = "Sorry, no jobs found matching those filters!";
         }
       },
       error: (err: any) => {
+        // If API goes down or connection fails
         this.isLoading = false;
         this.errorMessage = `Error fetching jobs (Status: ${err.status}): ${err.message || 'Check your connection'}`;
       }
     });
   }
 }
+

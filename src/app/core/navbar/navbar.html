@@ -1,3 +1,42 @@
-<nav style="background: #333; color: white; padding: 15px; text-align: center;">
-  NAVBAR - TESTE
+<nav class="navbar">
+  <div class="navbar-container">
+    <a class="navbar-brand" routerLink="/">
+      <span class="brand-icon">⚡</span>
+      <span class="brand-name">Skill<span class="brand-accent">Swap</span></span>
+    </a>
+
+    <ul class="navbar-links">
+      <li><a routerLink="/jobs/search" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}">Find Jobs</a></li>
+      <li><a routerLink="/jobs/create" routerLinkActive="active">Post a Job</a></li>
+    </ul>
+
+    <div class="navbar-auth">
+      <ng-container *ngIf="!authService.isLoggedIn()">
+        <a routerLink="/login" class="btn-nav btn-nav-outline">Log in</a>
+        <a routerLink="/register" class="btn-nav btn-nav-primary">Sign up</a>
+      </ng-container>
+      <ng-container *ngIf="authService.isLoggedIn()">
+        <a routerLink="/me" class="btn-nav btn-nav-outline">My Profile</a>
+        <button (click)="logout()" class="btn-nav btn-nav-primary" style="cursor:pointer; border: none; font-family: inherit; font-size: inherit; outline: none;">Logout</button>
+      </ng-container>
+    </div>
+
+    <button class="hamburger" (click)="toggleMenu()" [class.open]="menuOpen()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="mobile-menu" [class.visible]="menuOpen()">
+    <a routerLink="/jobs/search" routerLinkActive="active" (click)="menuOpen.set(false)">Find Jobs</a>
+    <a routerLink="/jobs/create" (click)="menuOpen.set(false)">Post a Job</a>
+    <div class="mobile-divider"></div>
+    <ng-container *ngIf="!authService.isLoggedIn()">
+      <a routerLink="/login" (click)="menuOpen.set(false)">Log in</a>
+      <a routerLink="/register" class="mobile-signup" (click)="menuOpen.set(false)">Sign up</a>
+    </ng-container>
+    <ng-container *ngIf="authService.isLoggedIn()">
+      <a routerLink="/me" (click)="menuOpen.set(false)">My Profile</a>
+      <a (click)="logout()" class="mobile-signup" style="cursor:pointer">Logout</a>
+    </ng-container>
+  </div>
 </nav>

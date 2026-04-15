@@ -2,12 +2,13 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Proposal, ProposalCreateRequest } from '../../models/proposal.model';
+import { API_BASE_URL } from '../config/api.config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProposalService {
-  private apiUrl = 'https://stingray-app-wxhhn.ondigitalocean.app';
+  private apiUrl = API_BASE_URL;
   private http = inject(HttpClient);
 
   /**

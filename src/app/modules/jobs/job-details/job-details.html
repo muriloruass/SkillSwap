@@ -1,73 +1,90 @@
-<div class="container job-details-page">
-  
-  <!-- Loading and Error State -->
-  <app-loading-spinner [isLoading]="isLoading"></app-loading-spinner>
-  
-  <div *ngIf="errorMessage" class="error-wrapper">
-    <app-error-message [message]="errorMessage"></app-error-message>
-    <button class="btn btn-outline" (click)="goBack()">Go Back to Search</button>
-  </div>
+**************<section class="job-details" *ngIf="job">
+  <div class="container">
+    <div class="job-header">
+      <h1>{{ job.title }}</h1>
+      <span class="status-badge" [ngClass]="'status-' + job.status">
+        {{ job.status.replace('_', ' ') }}
+      </span>
+    </div>
 
-  <!-- Job Content (Só mostra se encontrou um Job) -->
-  <div *ngIf="!isLoading && !errorMessage && job" class="job-split-layout">
-    
-    <!-- ESQUERDA: Texto Principal -->
-    <div class="job-main-info">
-      <button class="back-link" (click)="goBack()">← Back to Search</button>
+    <div class="job-meta">
+      <span class="budget">${{ job.budget }}</span>
+      <span class="category">{{ job.category }}</span>
+      <span class="date">Posted {{ job.created_at | date }}</span>
+    </div>
+
+    <div class="job-description">
+      <h3>Description</h3>
+      <p>{{ job.description }}</p>
+    </div>
+
+    <div class="job-owner">
+      <h3>Client</h3>
+      <div class="owner-info">
+        <strong>{{ job.owner?.name }}</strong>
+        <span>@{{ job.owner?.username }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert error">
+      {{ errorMessage }}
+    </div>
+
+    <div class="job-actions" *ngIf="isOwner">
+      <button *ngIf="job.status === 'open'" class="btn-primary" disabled>
+        Awaiting Proposals
+      </button>
+      <button *ngIf="job.status === 'in_progress'" class="btn-success" (click)="completeJob()">
+        Mark as Completed
+      </button>
+    </div>
+
+    <div class="submit-proposal-section" *ngIf="!isOwner && job.status === 'open'" style="margin-top: 30px; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      <h3>Submit a Proposal</h3>
+      <div *ngIf="proposalSuccess" class="alert success" style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 20px; border-radius: 4px;">
+        Proposal submitted successfully!
+      </div>
+      <form (ngSubmit)="submitProposal()" #proposalForm="ngForm" *ngIf="!proposalSuccess">
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">Your Price ($)</label>
+          <input type="number" name="price" [(ngModel)]="proposalPrice" required min="1" class="form-control" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+        </div>
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">Cover Letter</label>
+          <textarea name="coverLetter" [(ngModel)]="proposalCoverLetter" required rows="4" class="form-control" placeholder="Describe why you are a good fit for this job..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical;"></textarea>
+        </div>
+        <button type="submit" class="btn-primary" [disabled]="proposalForm.invalid || submittingProposal" style="width: 100%; padding: 12px; font-size: 16px;">
+          {{ submittingProposal ? 'Submitting...' : 'Submit Proposal' }}
+        </button>
+      </form>
+    </div>
+
+    <div class="proposals-section" *ngIf="isOwner && job.status === 'open'" style="margin-top: 30px;">
+      <h3>Proposals ({{ proposals.length }})</h3>
       
-      <div class="job-header">
-        <span class="badge badge-open">{{ job.category }}</span>
-        <h1>{{ job.title }}</h1>
-        <div class="job-meta">
-          <span><strong>Status:</strong> {{ job.status | uppercase }}</span>
-          <span><strong>Job ID:</strong> {{ job.id }}</span>
-        </div>
+      <div *ngIf="proposals.length === 0" class="no-proposals">
+        No proposals yet. Check back later.
       </div>
 
-      <div class="job-description">
-        <h2>About the Project</h2>
-        <p>{{ job.description }}</p>
+      <div class="proposals-list" *ngIf="proposals.length > 0">
+        <div class="proposal-card" *ngFor="let proposal of proposals">
+          <div class="proposal-header">
+            <strong>{{ proposal.freelancer?.name }}</strong>
+            <span class="price">${{ proposal.price }}</span>
+          </div>
+          <p>{{ proposal.cover_letter }}</p>
+          <div class="proposal-footer">
+            <span class="date">Submitted {{ proposal.created_at | date }}</span>
+            <button class="btn-accept" (click)="acceptProposal(proposal.id)">
+              Accept Proposal
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- DIREITA: Painel Interativo de Propostas -->
-    <div class="job-sidebar">
-      <div class="sidebar-card">
-        <h3>Project Budget</h3>
-        <p class="budget-price">💰 ${{ job.budget }}</p>
-        
-        <p class="sidebar-info" *ngIf="!submitSuccess">Are you the perfect fit for this job? Submit a proposal to the client.</p>
-
-        <!-- Mensagem de Sucesso (Fica Escondida até Enviar) -->
-        <div class="success-alert" *ngIf="submitSuccess">
-          <svg viewBox="0 0 24 24" fill="none" class="success-icon">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          <p>Proposal submitted successfully!</p>
-        </div>
-        
-        <!-- O Formulário de Submeter Proposta -->
-        <form *ngIf="!submitSuccess" [formGroup]="proposalForm" (ngSubmit)="submitProposal()">
-          <div class="form-group">
-            <label for="price">Your Proposal ($):</label>
-            <input type="number" id="price" formControlName="price" class="form-control" placeholder="E.g 500" min="1">
-          </div>
-
-          <div class="form-group">
-            <label for="cover_letter">Cover Letter:</label>
-            <textarea id="cover_letter" formControlName="cover_letter" class="form-control" rows="4" placeholder="Tell the client why you're the best for this... (Min 20 chars)"></textarea>
-          </div>
-
-          <!-- O botão de Clique Oficial -->
-          <button type="submit" class="btn btn-primary btn-block" 
-                  [disabled]="proposalForm.invalid || isSubmitting">
-            <span *ngIf="!isSubmitting">Submit Proposal</span>
-            <span *ngIf="isSubmitting">Sending...</span>
-          </button>
-        </form>
-
-      </div>
+    <div class="back-link">
+      <a routerLink="/jobs/my-postings">← Back to My Jobs</a>
     </div>
-
   </div>
-</div>
+</section>
