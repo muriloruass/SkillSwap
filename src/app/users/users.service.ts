@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from '../core/config/api.config';
 
 export interface User {
   id: string;
@@ -15,12 +16,11 @@ export interface User {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UsersService {
-  private apiUrl = 'https://stingray-app-wxhhn.ondigitalocean.app';
-
-  constructor(private http: HttpClient) {}
+  private apiUrl = API_BASE_URL;
+  private http = inject(HttpClient);
 
   getMyProfile(): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/users/me`);
@@ -30,7 +30,6 @@ export class UsersService {
     return this.http.get<User>(`${this.apiUrl}/users/${username}`);
   }
 
-   
   updateProfile(data: Partial<User>): Observable<User> {
     return this.http.patch<User>(`${this.apiUrl}/users/me`, data);
   }

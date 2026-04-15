@@ -1,4 +1,4 @@
-﻿<div class="profile-container">
+<div class="profile-container">
   <div class="profile-header">
     <h1>Public Profile</h1>
     <a routerLink="/" class="btn-secondary">← Back to Home</a>
@@ -38,11 +38,11 @@
         <span class="label">Completed Jobs</span>
       </div>
       <div class="stat">
-        <span class="value">{{ user.rating_avg?.toFixed(1) || '0.0' }}</span>
+        <span class="value">{{ user.rating_avg.toFixed(1) || '0.0' }}</span>
         <span class="label">Rating</span>
       </div>
       <div class="stat">
-        <span class="value">{{ user.skills?.length || 0 }}</span>
+        <span class="value">{{ user.skills.length || 0 }}</span>
         <span class="label">Skills</span>
       </div>
     </div>
@@ -68,7 +68,7 @@
         <span class="skill-tag" *ngFor="let skill of user.skills">
           {{ skill }}
         </span>
-        <span *ngIf="!user.skills?.length" class="no-skills">
+        <span *ngIf="!user.skills.length" class="no-skills">
           No skills added
         </span>
       </div>

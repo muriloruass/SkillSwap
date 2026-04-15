@@ -62,9 +62,14 @@
          <h3>{{ job.title }}</h3>
          <span class="badge badge-open">{{ job.category }}</span>
          <p class="budget">💰 ${{ job.budget }}</p>
-         <a [routerLink]="['/jobs', job.id]" class="btn btn-outline" style="width: 100%; margin-top: 1rem; text-align: center; text-decoration: none; cursor: pointer;">
-           View Details
-         </a>
+         <div style="display: flex; gap: 10px; margin-top: 1rem;">
+           <a [routerLink]="['/jobs', job.id]" class="btn btn-outline" style="flex: 1; text-align: center; text-decoration: none; cursor: pointer;">
+             View Details
+           </a>
+           <a *ngIf="job.owner && job.owner.username" [routerLink]="['/users', job.owner.username]" class="btn btn-secondary" style="flex: 1; text-align: center; text-decoration: none; cursor: pointer;">
+             View Profile
+           </a>
+         </div>
       </div>
     </div>
     

@@ -1,96 +1,127 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-import { JobsService } from '../../../core/services/job.service';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { JobsService, Job, Proposal } from '../../../core/services/job.service';
 import { ProposalService } from '../../../core/services/proposal';
-import { Job } from '../../../models/job.model';
-
-import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner';
-import { ErrorMessageComponent } from '../../../shared/components/error-message/error-message';
 
 @Component({
   selector: 'app-job-details',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, LoadingSpinnerComponent, ErrorMessageComponent],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './job-details.html',
   styleUrls: ['./job-details.css']
 })
-export class JobDetailsComponent implements OnInit {
-  job: any = null;
-  isLoading: boolean = true;
-  errorMessage: string | null = null;
+export class JobDetails implements OnInit {
+  private jobsService = inject(JobsService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
-  proposalForm: FormGroup;
-  isSubmitting: boolean = false;
-  submitSuccess: boolean = false;
+  job: Job | null = null;
+  proposals: Proposal[] = [];
+  loading = true;
+  errorMessage = '';
+  isOwner = false;
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private jobsService: JobsService,
-    private proposalService: ProposalService,
-    private fb: FormBuilder
-  ) {
-    this.proposalForm = this.fb.group({
-      price: ['', [Validators.required, Validators.min(1)]],
-      cover_letter: ['', [Validators.required, Validators.minLength(20)]]
-    });
-  }
+  private proposalService = inject(ProposalService);
+  proposalPrice: number | null = null;
+  proposalCoverLetter: string = '';
+  submittingProposal = false;
+  proposalSuccess = false;
 
-  ngOnInit(): void {
+  ngOnInit() {
     const jobId = this.route.snapshot.paramMap.get('id');
     if (jobId) {
-      this.loadJobDetails(jobId);
-    } else {
-      this.isLoading = false;
-      this.errorMessage = "Invalid Job ID provided in the URL.";
+      this.loadJob(jobId);
     }
   }
 
-  loadJobDetails(id: string): void {
-    this.jobsService.getJobById(id).subscribe({
-      next: (jobData: any) => {
-        this.job = jobData;
-        this.isLoading = false;
+  loadJob(jobId: string) {
+    this.jobsService.getJobById(jobId).subscribe({
+      next: (job: any) => {
+        this.job = job;
+        this.checkIfOwner();
+        this.loadProposals(jobId);
       },
       error: (err: any) => {
-        this.isLoading = false;
-        this.errorMessage = `Could not load job details. (Status: ${err.status})`;
+        this.errorMessage = err.error?.error || 'Failed to load job';
+        this.loading = false;
       }
     });
   }
 
-  goBack(): void {
-    this.router.navigate(['/jobs/search']);
+  loadProposals(jobId: string) {
+    this.jobsService.getJobProposals(jobId).subscribe({
+      next: (proposals: any) => {
+        this.proposals = proposals;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      }
+    });
   }
 
-  submitProposal(): void {
-    if (this.proposalForm.invalid || !this.job) return;
+  checkIfOwner() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const ownerId = this.job?.owner?.id || this.job?.owner?._id;
+    this.isOwner = ownerId === user?.id;
+  }
 
-    this.isSubmitting = true;
-    this.errorMessage = null;
-    
-    const newProposalData = {
-      price: this.proposalForm.get('price')?.value,
-      cover_letter: this.proposalForm.get('cover_letter')?.value
-    };
-
-    this.proposalService.createProposal(this.job.id.toString(), newProposalData).subscribe({
-      next: (response: any) => {
-        this.isSubmitting = false;
-        this.submitSuccess = true;
-        this.proposalForm.reset();
-        console.log('Proposal created successfully:', response);
+  acceptProposal(proposalId: string) {
+    this.jobsService.acceptProposal(proposalId).subscribe({
+      next: () => {
+        this.router.navigate(['/jobs/my-postings']);
       },
       error: (err: any) => {
-        this.isSubmitting = false;
-        if (err.status === 409) {
-          this.errorMessage = "You have already submitted a proposal for this job.";
-        } else {
-          this.errorMessage = err.error?.error || 'Failed to submit proposal. Please try again.';
+        this.errorMessage = err.error?.error || 'Failed to accept proposal';
+      }
+    });
+  }
+
+  completeJob() {
+    if (this.job) {
+      const jobId = this.job.id || this.job.job_id;
+      
+      if (!jobId) {
+        this.errorMessage = 'Job ID not found';
+        return;
+      }
+      
+      this.jobsService.completeJob(jobId).subscribe({
+        next: () => {
+          this.router.navigate(['/jobs/my-postings']);
+        },
+        error: (err: any) => {
+          this.errorMessage = err.error?.error || 'Failed to complete job';
         }
+      });
+    }
+  }
+
+  submitProposal() {
+    if (!this.job || !this.proposalPrice || !this.proposalCoverLetter) return;
+    
+    this.submittingProposal = true;
+    this.errorMessage = '';
+    
+    const jobId = this.job.id || this.job.job_id;
+    if (!jobId) return;
+    
+    this.proposalService.createProposal(jobId, {
+      price: this.proposalPrice,
+      cover_letter: this.proposalCoverLetter
+    }).subscribe({
+      next: () => {
+        this.submittingProposal = false;
+        this.proposalSuccess = true;
+        this.proposalPrice = null;
+        this.proposalCoverLetter = '';
+        this.loadProposals(jobId);
+      },
+      error: (err: any) => {
+        this.submittingProposal = false;
+        this.errorMessage = err.error?.error || 'Failed to submit proposal';
       }
     });
   }

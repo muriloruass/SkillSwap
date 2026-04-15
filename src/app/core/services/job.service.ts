@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from '../config/api.config';
 
 export interface Job {
   job_id?: string;
@@ -34,12 +35,11 @@ export interface JobSearchRequest {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class JobsService {
-  private apiUrl = 'https://stingray-app-wxhhn.ondigitalocean.app';
-
-  constructor(private http: HttpClient) { }
+  private apiUrl = API_BASE_URL;
+  private http = inject(HttpClient);
 
   searchJobs(filters: JobSearchRequest): Observable<Job[]> {
     return this.http.post<Job[]>(`${this.apiUrl}/jobs/search`, filters);
@@ -67,5 +67,9 @@ export class JobsService {
 
   completeJob(jobId: string): Observable<any> {
     return this.http.patch(`${this.apiUrl}/jobs/${jobId}/complete`, {});
+  }
+
+  deleteJob(jobId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/jobs/${jobId}`);
   }
 }

@@ -36,7 +36,10 @@
       </div>
 
       <div class="job-footer">
-        <a [routerLink]="['/jobs', job.id]" class="btn-secondary">View Details</a>
+        <div class="actions">
+          <a [routerLink]="['/jobs', job.id || job.job_id]" class="btn-secondary">View Details</a>
+          <button (click)="deleteJob(job.id || job.job_id)" class="btn-delete">Delete</button>
+        </div>
         <span class="proposals" *ngIf="job.proposals_count">
           {{ job.proposals_count }} proposals
         </span>

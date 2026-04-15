@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
-
+import { API_BASE_URL } from '../core/config/api.config';
 
 export interface AuthResponse {
   token: string;
@@ -26,50 +26,41 @@ export interface LoginData {
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {  
+export class AuthService {
   private http = inject(HttpClient);
-  private router = inject(Router);  
-  private apiUrl = 'https://stingray-app-wxhhn.ondigitalocean.app'; 
+  private router = inject(Router);
+  private apiUrl = API_BASE_URL;
 
- 
   login(data: LoginData): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, data).pipe(
       tap((response) => {
-       
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify(response.user));
-      })
+      }),
     );
   }
-
 
   register(data: RegisterData): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, data).pipe(
-      tap((response) => {
-       
-      })
-    );
+    return this.http
+      .post<AuthResponse>(`${this.apiUrl}/auth/register`, data)
+      .pipe(tap((response) => {}));
   }
 
- 
   getToken(): string | null {
     return localStorage.getItem('token');
   }
 
- 
   getUser(): any {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
   }
 
-  
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.router.navigate(['/login']);
   }
 
-  
   isLoggedIn(): boolean {
     return !!this.getToken();
   }

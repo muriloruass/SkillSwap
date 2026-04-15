@@ -1,12 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { UsersService, User } from '../users.service';
 
 @Component({
   selector: 'app-my-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './my-profile.html',
   styleUrls: ['./my-profile.css']
 })
@@ -16,6 +17,10 @@ export class MyProfile implements OnInit {
   user: User | null = null;
   loading = true;
   errorMessage = '';
+
+  isEditing = false;
+  editingBio = '';
+  editingSkills = '';
 
   ngOnInit() {
     this.loadProfile();
@@ -46,5 +51,34 @@ export class MyProfile implements OnInit {
       }
     }
     return stars;
+  }
+
+  toggleEdit() {
+    if (this.isEditing) {
+      const updatedData = {
+        bio: this.editingBio,
+        skills: this.editingSkills.split(',').map(s => s.trim()).filter(s => s.length > 0)
+      };
+      
+      this.usersService.updateProfile(updatedData).subscribe({
+        next: (updatedUser) => {
+          this.user = updatedUser;
+          this.isEditing = false;
+        },
+        error: (err: any) => {
+          this.errorMessage = err.error?.error || 'Failed to update profile';
+        }
+      });
+    } else {
+      if (this.user) {
+        this.editingBio = this.user.bio || '';
+        this.editingSkills = (this.user.skills || []).join(', ');
+      }
+      this.isEditing = true;
+    }
+  }
+
+  cancelEdit() {
+    this.isEditing = false;
   }
 }
